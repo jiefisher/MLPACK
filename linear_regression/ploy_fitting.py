@@ -31,7 +31,7 @@ def poly_basis_function(x,j):
 #alpha:learning rate("SVD" specially)
 #g_iter:iterations of "SVD"("SVD" specially)
 ###
-def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,alpha=.00001,g_iter=1000):
+def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,alpha=.00001,g_iter=1):
 	###
 	#the error function is:
 	#1/2*(y-f(X,W))^2
@@ -90,14 +90,18 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 		loss=1.0
 		weights=np.mat(np.ones(b_iter))
 		i=0
-		
+		if train_X.shape[0]<g_iter:
+			n=train_X.shape[0]
+		else:
+			n=g_iter
+		#print(n)
 		while  loss>epsilon :
-			for j in range(0,train_X.shape[0]):
+			for j in range(0,n):
 				h=np.sum(ma[j]*weights.T)
 				error=y[0,j]-h
 				loss=(1/2)*error**2
 				weights=weights+alpha*error*ma[j]
-				
+				#print(weights)
 			i=i+1
 			if i>g_iter:
 				break
