@@ -26,12 +26,15 @@ def poly_basis_function(x,j):
 #feature: if the number of features is 1,use "single",else,"multi"
 #basis_func:the basis function,like"Poly" as polynomial fitting
 #b_iter:the power of poly function,such as x^n
-#method:the method of minimizing the error function,such"leaast_square" for minimizing least square,"SVD"for stochastic gradient descent
-#epsilon:loss_rate of error function("SVD" specially)
-#alpha:learning rate("SVD" specially)
-#g_iter:iterations of "SVD"("SVD" specially)
+#method:the method of minimizing the error function,such"leaast_square" for minimizing least square,"SGD"for stochastic gradient descent
+#epsilon:loss_rate of error function("SGD" specially)
+#lambdas:parameter for preventing overfitting
+#alpha:learning rate("SGD" specially)
+#g_iter:iterations of "SGD"("SGD" specially)
 ###
-def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,alpha=.00001,g_iter=100000):
+
+def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,lambdas=.01,alpha=.00001,g_iter=10000):
+
 	###
 	#the error function is:
 	#1/2*(y-f(X,W))^2
@@ -64,7 +67,7 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 		mat_middle=mat_X.T*mat_X
 		mat_i=mat_middle.I*mat_X.T*y.T
 		print(mat_i)#the parameter matrix
-	if method=="SVD":#use stochastic gradient descent to minimize the error function
+	if method=="SGD":#use stochastic gradient descent to minimize the error function
 	###
 	#the formula of stochastic gradient descent is:
 	#[W]=[W]+alpha*(y(i)-f(i)(W,X))*[X]
@@ -96,13 +99,19 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 			for j in range(0,train_X.shape[0]):
 				h=np.sum(ma[j]*weights.T)
 				error=y[0,j]-h
-				loss=(1/2)*(error**2+.003*np.sum(weights*weights.T))
-				weights=weights+alpha*(error*ma[j]+.003*weights)
+
+				loss=(1/2)*(error**2+lambdas*np.sum(weights*weights.T))
+				weights=weights+alpha*(error*ma[j]+lambdas*weights)
 				print(loss)
 				if np.sum(loss)<epsilon:
+
+					loss=(1/2)*error**2
+					weights=weights+alpha*error*ma[j]
 					print(loss)
-					break
+					if loss<epsilon:
+						print(loss)
+						break
 			if  loss<epsilon:
 				break
 		print(weights)#the parameter matrix
-ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=2,method="SVD")
+ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=2,method="SGD")
