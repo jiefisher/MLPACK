@@ -103,16 +103,10 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 				weights=weights+alpha*(error*ma[j]+lambdas*weights)
 				print(loss)
 				if np.sum(loss)<epsilon:
-
-					loss=(1/2)*error**2
-					weights=weights+alpha*error*ma[j]
-					print(loss)
-					if loss<epsilon:
-						print(loss)
 						break
-			if  loss<epsilon:
+			if  np.sum(loss)<epsilon:
 				break
 		print(weights)#the parameter matrix
 
-ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=2,method="SGD")
+ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=2,method="least_sqare")
 
