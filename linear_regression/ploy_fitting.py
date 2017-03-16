@@ -33,8 +33,8 @@ def poly_basis_function(x,j):
 #g_iter:iterations of "SGD"("SGD" specially)
 ###
 
-def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,lambdas=.01,alpha=.00001,g_iter=10000):
 
+def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method="least_sqare",epsilon=.001,lambdas=.03,alpha=.00001,g_iter=10000):
 	###
 	#the error function is:
 	#1/2*(y-f(X,W))^2
@@ -99,7 +99,6 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 			for j in range(0,train_X.shape[0]):
 				h=np.sum(ma[j]*weights.T)
 				error=y[0,j]-h
-
 				loss=(1/2)*(error**2+lambdas*np.sum(weights*weights.T))
 				weights=weights+alpha*(error*ma[j]+lambdas*weights)
 				print(loss)
@@ -114,4 +113,6 @@ def ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=1,method=
 			if  loss<epsilon:
 				break
 		print(weights)#the parameter matrix
+
 ploy_fitting(train_X,y,n_feature="single",basis_func="Poly",b_iter=2,method="SGD")
+
